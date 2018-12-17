@@ -1,0 +1,39 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.example.demo.mapper.CustomerMapper" >
+	<resultMap type="com.example.demo.entity.Customer" id="CustomerResultMap">
+		<id property="id" column="id" jdbcType="INTEGER"/><!-- jdbc类型必须要大写且不能错 -->
+		<result property="name" column="name" jdbcType="VARCHAR"/>
+		<result property="age" column="age" jdbcType="INTEGER"/>
+		<result property="gender" column="gender" jdbcType="VARCHAR"/>
+		<result property="birthday" column="birthday" jdbcType="VARCHAR"/>
+		<result property="updateTime" column="update_time" jdbcType="TIME"/>
+	</resultMap>
+	<sql id="customer_column_list">id,name,age,gender,birthday,update_time</sql>
+	<select id="getAll" resultMap="CustomerResultMap">
+		SELECT <include refid="customer_column_list"/> FROM tb_customer
+	</select>
+
+	<select id="getOne" parameterType="java.lang.Integer" resultMap="CustomerResultMap">
+		SELECT * FROM tb_customer WHERE id=#{id}
+	</select>
+		
+	<insert id="insert" parameterType="com.example.demo.entity.Customer">
+		INSERT INTO tb_customer(name,age,gender,birthday,update_time) 
+		VALUES(#{name},#{age},#{gender},#{birthday},#{updateTime})
+	</insert>
+		
+	<update id="update" parameterType="com.example.demo.entity.Customer">
+		UPDATE tb_customer SET 
+		<if test="name!=null">name=#{name},</if>
+		<if test="age!=null">age=#{age},</if>
+		<if test="gender!=null">gender=#{gender},</if>
+		<if test="birthday!=null">birthday=#{birthday},</if>
+		<if test="updateTime">update_time=#{updateTime}</if>
+		WHERE id=#{id}
+	</update>
+	
+	<delete id="delete" parameterType="java.lang.Integer">
+		DELETE FROM tb_customer WHERE id=#{id}
+	</delete>
+</mapper>
